@@ -15,10 +15,12 @@ import devarea.fr.discord.workers.linked.MissionWorker;
 import discord4j.common.util.Snowflake;
 import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
+import discord4j.core.object.component.Label;
 import discord4j.core.object.component.SelectMenu;
 import discord4j.core.object.component.TextInput;
+import devarea.fr.utils.ModalUtils;
 import discord4j.core.object.entity.channel.GuildMessageChannel;
-import discord4j.core.object.reaction.ReactionEmoji;
+import discord4j.core.object.emoji.Emoji;
 import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionApplicationCommandCallbackSpec;
@@ -111,15 +113,15 @@ public class Admin extends SlashCommand {
             return;
         System.out.println("Receive event !");
         filler.event.presentModal("Création d'un message d'ajouts d'avis.", "admin_avis_modal", List.of(
-                ActionRow.of(TextInput.small("admin_avis_aimid", "Sur quel membre voulez vous ajouter un avis ?")),
-                ActionRow.of(TextInput.small("admin_avis_status", "Quel est le type du mem ajoutant l'avis ? F/C")),
-                ActionRow.of(TextInput.small("admin_avis_messagestatus", "Message visible par tout le monde ? o/n", 1, 1))
+                Label.of("Sur quel membre voulez vous ajouter un avis ?", TextInput.small("admin_avis_aimid")),
+                Label.of("Quel est le type du mem ajoutant l'avis ? F/C", TextInput.small("admin_avis_status")),
+                Label.of("Message visible par tout le monde ? o/n", TextInput.small("admin_avis_messagestatus", 1, 1))
         )).subscribe();
 
         filler.mem.listenDuring((ActionEvent<ModalSubmitInteractionEventFiller>) fillerModal -> {
-            final String id = fillerModal.event.getComponents().get(0).getData().components().get().get(0).value().get();
-            final String status = fillerModal.event.getComponents().get(1).getData().components().get().get(0).value().get();
-            final String message_status = fillerModal.event.getComponents().get(2).getData().components().get().get(0).value().get();
+            final String id = ModalUtils.getValue(fillerModal.event, 0);
+            final String status = ModalUtils.getValue(fillerModal.event, 1);
+            final String message_status = ModalUtils.getValue(fillerModal.event, 2);
 
             final EmbedCreateSpec embed = EmbedCreateSpec.builder()
                     .title("Ajouter un avis.")
@@ -127,7 +129,7 @@ public class Admin extends SlashCommand {
                     .color(ColorsUsed.same)
                     .build();
 
-            final Button button = Button.primary("avis_" + id + "_" + status, ReactionEmoji.codepoints("U+1F4D5"), "Laisser un avis.");
+            final Button button = Button.primary("avis_" + id + "_" + status, Emoji.codepoints("U+1F4D5"), "Laisser un avis.");
 
             if (message_status.toLowerCase(Locale.ROOT).equals("o"))
                 fillerModal.event.reply(InteractionApplicationCommandCallbackSpec.builder()
@@ -168,7 +170,7 @@ public class Admin extends SlashCommand {
 
         ActionEvent<?> buttonOpenModal = (ActionEvent<ButtonInteractionEventFiller>) fillerButtonModal -> {
             if (fillerButtonModal.event.getCustomId().equals("admin_button_freelance_id"))
-                fillerButtonModal.event.presentModal("Donnez moi l'id du membre : ", "admin_modal_freelance_id", List.of(ActionRow.of(TextInput.small("modal_id", "Member id : ", 15, 21)))).subscribe();
+                fillerButtonModal.event.presentModal("Donnez moi l'id du membre : ", "admin_modal_freelance_id", List.of(Label.of("Member id : ", TextInput.small("modal_id", 15, 21)))).subscribe();
         };
         filler.mem.listenDuring(buttonOpenModal, true, SPOILED_TIME, contextFromButtonReply);
 
@@ -179,7 +181,7 @@ public class Admin extends SlashCommand {
 
                 if (fillerModal.event.getCustomId().equals("admin_modal_freelance_id")) {
 
-                    final String id = fillerModal.event.getComponents().get(0).getData().components().get().get(0).value().get();
+                    final String id = ModalUtils.getValue(fillerModal.event, 0);
 
 
                     Mem mem = MemberCache.get(id);

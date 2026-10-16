@@ -9,6 +9,7 @@ import devarea.fr.discord.statics.ColorsUsed;
 import devarea.fr.discord.workers.self.XPWorker;
 import discord4j.core.object.command.ApplicationCommandOption;
 import discord4j.core.spec.EmbedCreateSpec;
+import discord4j.core.spec.MessageCreateFields;
 import discord4j.core.spec.InteractionReplyEditSpec;
 import discord4j.discordjson.json.ApplicationCommandOptionData;
 import discord4j.discordjson.json.ApplicationCommandRequest;
@@ -105,7 +106,7 @@ public class Rank extends SlashCommand {
                 ImageIO.write(img, "png", outputStream);
 
                 filler.event.editReply(InteractionReplyEditSpec.builder()
-                        .addFile("xp.png", new ByteArrayInputStream(outputStream.toByteArray()))
+                        .addFile(MessageCreateFields.File.of("xp.png", new ByteArrayInputStream(outputStream.toByteArray())))
                         .addEmbed(EmbedCreateSpec.builder()
                                 .title("XP de " + target.entity.getDisplayName())
                                 .color(ColorsUsed.same)

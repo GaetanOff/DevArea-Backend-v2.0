@@ -15,7 +15,7 @@ import discord4j.common.util.Snowflake;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.User;
 import discord4j.core.object.entity.channel.GuildMessageChannel;
-import discord4j.core.object.reaction.ReactionEmoji;
+import discord4j.discordjson.json.MessageReferenceData;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.MessageCreateSpec;
 import discord4j.core.spec.MessageEditSpec;
@@ -126,7 +126,7 @@ public class RunCommandWorker implements Worker {
         Matcher matcher = PATTERN.matcher(content);
 
         if (matcher.find()) {
-            message.addReaction(ReactionEmoji.custom(Core.devarea.getGuildEmojiById(Core.data.loading).block())).subscribe();
+            message.addReaction(Core.devarea.getEmojiById(Core.data.loading).block()).subscribe();
 
             JudgeSubmission submission = new JudgeSubmissionBuilder()
                     .args(matcher.group(1))
@@ -138,7 +138,7 @@ public class RunCommandWorker implements Worker {
             JudgeManager.get().executeAsync(submission).thenAccept(response -> {
                 sendResponse(message, embedResponse(response, message.getAuthor().get()), true);
             }).whenComplete((res, e) -> {
-                message.removeSelfReaction(ReactionEmoji.custom(Core.devarea.getGuildEmojiById(Core.data.loading).block())).subscribe();
+                message.removeSelfReaction(Core.devarea.getEmojiById(Core.data.loading).block()).subscribe();
                 if (e != null) {
                     if (e.getCause() instanceof JudgeException) {
                         Chan<GuildMessageChannel> channel = ChannelCache.get(message.getChannelId().asString());
@@ -187,7 +187,7 @@ public class RunCommandWorker implements Worker {
         } else if (replyId == null) {
             reply = channel.entity.createMessage(MessageCreateSpec.builder()
                     .addEmbed(spec)
-                    .messageReference(message.getId())
+                    .messageReference(MessageReferenceData.builder().messageId(message.getId().asLong()).build())
                     .allowedMentions(AllowedMentions.suppressAll())
                     .build()).block();
             if (edit && reply != null) {

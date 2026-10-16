@@ -14,8 +14,10 @@ import discord4j.common.util.Snowflake;
 import discord4j.core.event.domain.interaction.*;
 import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
+import discord4j.core.object.component.Label;
 import discord4j.core.object.component.SelectMenu;
 import discord4j.core.object.component.TextInput;
+import devarea.fr.utils.ModalUtils;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.channel.GuildMessageChannel;
 import discord4j.core.spec.EmbedCreateSpec;
@@ -108,7 +110,7 @@ public class UseBot extends SlashCommand {
 
             ActionEvent<ButtonInteractionEventFiller> buttonAction = fillerButton -> {
                 if (fillerButton.event.getCustomId().equals("usebot_open_id"))
-                    fillerButton.event.presentModal("Donnez moi l'id du message !", "usebot_modal_id", List.of(ActionRow.of(TextInput.small("usebot_id", "Message id : ", 19, 19)))).subscribe();
+                    fillerButton.event.presentModal("Donnez moi l'id du message !", "usebot_modal_id", List.of(Label.of("Message id : ", TextInput.small("usebot_id", 19, 19)))).subscribe();
             };
             mem.listenDuring(buttonAction, true, SPOILED_TIME, filler.context());
 
@@ -118,7 +120,7 @@ public class UseBot extends SlashCommand {
 
                     if (fillerModal.event.getCustomId().equals("usebot_modal_id")) {
 
-                        final String id = fillerModal.event.getComponents().get(0).getData().components().get().get(0).value().get();
+                        final String id = ModalUtils.getValue(fillerModal.event, 0);
 
 
                         Chan<GuildMessageChannel> chan = ChannelCache.get(fillerModal.event.getInteraction().getChannelId().asString());
@@ -190,11 +192,11 @@ public class UseBot extends SlashCommand {
      */
     private void actionMessage(final SelectMenuInteractionEventFiller filler) {
         Mem mem = MemberCache.watch(filler.event.getInteraction().getMember().get().getId().asString());
-        filler.event.presentModal("Complétez votre message !", "usebot_modal_message_content", List.of(ActionRow.of(TextInput.paragraph("usebot_content_message", "Message : ", 1, 2000)))).subscribe();
+        filler.event.presentModal("Complétez votre message !", "usebot_modal_message_content", List.of(Label.of("Message : ", TextInput.paragraph("usebot_content_message", 1, 2000)))).subscribe();
 
         mem.listenDuring((ActionEvent<ModalSubmitInteractionEventFiller>) fillerModal -> {
 
-            final String content = fillerModal.event.getComponents().get(0).getData().components().get().get(0).value().get();
+            final String content = ModalUtils.getValue(fillerModal.event, 0);
 
             if (newMessage) {
                 Chan<GuildMessageChannel> chan = ChannelCache.watch(this.filler.event.getInteraction().getChannelId().asString());
@@ -232,17 +234,17 @@ public class UseBot extends SlashCommand {
                 "Complétez votre embed !",
                 "usebot_modal_embed_content",
                 List.of(
-                        ActionRow.of(TextInput.small("usebot_title_embed", "Title : ", 1, 250))
-                        , ActionRow.of(TextInput.paragraph("usebot_description_embed", "Description : ", 1, 2000))
-                        , ActionRow.of(TextInput.small("usebot_color_embed", "Color (same | just | wrong) : ", 4, 5))
+                        Label.of("Title : ", TextInput.small("usebot_title_embed", 1, 250))
+                        , Label.of("Description : ", TextInput.paragraph("usebot_description_embed", 1, 2000))
+                        , Label.of("Color (same | just | wrong) : ", TextInput.small("usebot_color_embed", 4, 5))
                 )
         ).subscribe();
 
         mem.listenDuring((ActionEvent<ModalSubmitInteractionEventFiller>) fillerModal -> {
 
-            final String title = fillerModal.event.getComponents().get(0).getData().components().get().get(0).value().get();
-            final String content = fillerModal.event.getComponents().get(1).getData().components().get().get(0).value().get();
-            final String color = fillerModal.event.getComponents().get(2).getData().components().get().get(0).value().get();
+            final String title = ModalUtils.getValue(fillerModal.event, 0);
+            final String content = ModalUtils.getValue(fillerModal.event, 1);
+            final String color = ModalUtils.getValue(fillerModal.event, 2);
 
             Color colorObj = ColorsUsed.same;
             if (color.equals("wrong"))

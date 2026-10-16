@@ -22,7 +22,7 @@ import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.channel.Category;
 import discord4j.core.object.entity.channel.GuildMessageChannel;
 import discord4j.core.object.entity.channel.TextChannel;
-import discord4j.core.object.reaction.ReactionEmoji;
+import discord4j.core.object.emoji.Emoji;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.GuildMemberEditSpec;
 import discord4j.core.spec.MessageCreateSpec;
@@ -180,10 +180,10 @@ public class AntiSpamWorker implements Worker {
             )
             .addComponent(
                 ActionRow.of(
-                    Button.danger("antiSpam_ban_" + memberIdString + "_" + channelIdString, ReactionEmoji.unicode("⛔"), "Bannir"),
-                    Button.danger("antiSpam_muteWeek_" + memberIdString + "_" + channelIdString, ReactionEmoji.unicode("🔇"), "Mute 1 semaine"),
-                    Button.primary("antiSpam_muteDay_" + memberIdString + "_" + channelIdString, ReactionEmoji.unicode("🔉"), "Mute 1 jour"),
-                    Button.success("antiSpam_free_" + memberIdString + "_" + channelIdString, ReactionEmoji.unicode("✅"), "Libérer")
+                    Button.danger("antiSpam_ban_" + memberIdString + "_" + channelIdString, Emoji.unicode("⛔"), "Bannir"),
+                    Button.danger("antiSpam_muteWeek_" + memberIdString + "_" + channelIdString, Emoji.unicode("🔇"), "Mute 1 semaine"),
+                    Button.primary("antiSpam_muteDay_" + memberIdString + "_" + channelIdString, Emoji.unicode("🔉"), "Mute 1 jour"),
+                    Button.success("antiSpam_free_" + memberIdString + "_" + channelIdString, Emoji.unicode("✅"), "Libérer")
                 )
             )
             .build()

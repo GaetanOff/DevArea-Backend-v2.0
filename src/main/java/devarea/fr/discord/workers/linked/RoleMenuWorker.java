@@ -4,6 +4,7 @@ import devarea.fr.discord.entities.ActionEvent;
 import devarea.fr.discord.entities.events_filler.SelectMenuInteractionEventFiller;
 import devarea.fr.discord.workers.Worker;
 import discord4j.common.util.Snowflake;
+import discord4j.core.object.component.LayoutComponent;
 import discord4j.core.spec.InteractionApplicationCommandCallbackSpec;
 import discord4j.discordjson.json.SelectOptionData;
 
@@ -21,7 +22,7 @@ public class RoleMenuWorker implements Worker {
                 StringBuilder removeRoles = new StringBuilder();
 
                 for (SelectOptionData options :
-                        filler.event.getMessage().get().getComponents().get(0).getChildren().get(0).getData().options().get()) {
+                        ((LayoutComponent) filler.event.getMessage().get().getComponents().get(0)).getChildren().get(0).getData().options().get()) {
                     String id = options.value().substring(SELECTOR.length());
                     if (filler.event.getValues().contains(options.value())) {
                         if (filler.event.getInteraction().getMember().get().getRoleIds().contains(Snowflake.of(id)))
