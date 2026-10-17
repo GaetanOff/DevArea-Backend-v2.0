@@ -20,7 +20,7 @@ import discord4j.core.object.component.Button;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.channel.GuildMessageChannel;
 import discord4j.core.object.entity.channel.TextChannel;
-import discord4j.core.object.reaction.ReactionEmoji;
+import discord4j.core.object.emoji.Emoji;
 import discord4j.core.spec.*;
 import discord4j.rest.util.Permission;
 import discord4j.rest.util.PermissionSet;
@@ -306,7 +306,7 @@ public class MissionFollowWorker implements Worker {
 
                     MemberCache.get(missionFollow.getClientId()).entity.getPrivateChannel().block().createMessage(MessageCreateSpec.builder()
                         .addEmbed(embed)
-                        .addComponent(ActionRow.of(Button.primary("avis_" + missionFollow.getDevId() + "_C", ReactionEmoji.codepoints("U+1F4D5"), "Laisser un avis.")))
+                        .addComponent(ActionRow.of(Button.primary("avis_" + missionFollow.getDevId() + "_C", Emoji.codepoints("U+1F4D5"), "Laisser un avis.")))
                         .build()).subscribe();
                 });
                 startAway(() -> {
@@ -318,7 +318,7 @@ public class MissionFollowWorker implements Worker {
                         .build();
                     MemberCache.get(missionFollow.getDevId()).entity.getPrivateChannel().block().createMessage(MessageCreateSpec.builder()
                         .addEmbed(embed)
-                        .addComponent(ActionRow.of(Button.primary("avis_" + missionFollow.getClientId() + "_F", ReactionEmoji.codepoints("U+1F4D5"), "Laisser un avis.")))
+                        .addComponent(ActionRow.of(Button.primary("avis_" + missionFollow.getClientId() + "_F", Emoji.codepoints("U+1F4D5"), "Laisser un avis.")))
                         .build()).subscribe();
                 });
 

@@ -9,8 +9,9 @@ import devarea.fr.discord.entities.events_filler.ButtonInteractionEventFiller;
 import devarea.fr.discord.entities.events_filler.ModalSubmitInteractionEventFiller;
 import devarea.fr.discord.statics.ColorsUsed;
 import devarea.fr.discord.workers.Worker;
+import devarea.fr.utils.ModalUtils;
 import discord4j.common.util.Snowflake;
-import discord4j.core.object.component.ActionRow;
+import discord4j.core.object.component.Label;
 import discord4j.core.object.component.TextInput;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionApplicationCommandCallbackSpec;
@@ -39,7 +40,7 @@ public class AvisWorker implements Worker {
 
         int grade;
         try {
-            grade = Integer.parseInt(filler.event.getComponents().get(0).getData().components().get().get(0).value().get());
+            grade = Integer.parseInt(ModalUtils.getValue(filler.event, 0));
         } catch (NumberFormatException e) {
             filler.event.reply(InteractionApplicationCommandCallbackSpec.builder()
                     .ephemeral(true)
@@ -67,7 +68,7 @@ public class AvisWorker implements Worker {
                 grade,
                 DBAvis.Status.getStatus(splitted[2]),
                 filler.mem.getSId(),
-                filler.event.getComponents().get(1).getData().components().get().get(0).value().get()
+                ModalUtils.getValue(filler.event, 1)
         ));
 
         filler.event.getInteraction().getMessage().get().getChannel().block().getMessageById(Snowflake.of(splitted[3])).block().edit(MessageEditSpec.builder()
@@ -87,8 +88,8 @@ public class AvisWorker implements Worker {
         filler.event.presentModal("Laissez un avis pour " + (mem == null ? splitted[1] : mem.entity.getDisplayName()),
                 "avismodal_" + splitted[1] + "_" + splitted[2] + "_" + filler.event.getInteraction().getMessage().get().getId().asString(),
                 List.of(
-                        ActionRow.of(TextInput.small("grade", "Note ?/5", 1, 1)),
-                        ActionRow.of(TextInput.paragraph("comment", "Points positif/négatif de votre échange.", 70, 300))
+                        Label.of("Note ?/5", TextInput.small("grade", 1, 1)),
+                        Label.of("Points positif/négatif de votre échange.", TextInput.paragraph("comment", 70, 300))
                 )).subscribe();
 
     }

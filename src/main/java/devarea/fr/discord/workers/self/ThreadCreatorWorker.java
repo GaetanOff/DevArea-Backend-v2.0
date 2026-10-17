@@ -9,7 +9,7 @@ import devarea.fr.discord.workers.Worker;
 import devarea.fr.utils.Logger;
 import discord4j.common.util.Snowflake;
 import discord4j.core.object.entity.channel.GuildMessageChannel;
-import discord4j.core.spec.StartThreadSpec;
+import discord4j.core.spec.StartThreadFromMessageSpec;
 
 public class ThreadCreatorWorker implements Worker {
 
@@ -25,7 +25,7 @@ public class ThreadCreatorWorker implements Worker {
                 int characterNumber = Math.min(filler.event.getMessage().getContent().length(), 94 - filler.event.getMember().get().getDisplayName().length());
 
                 filler.event.getMessage().startThread(
-                        StartThreadSpec.builder()
+                        StartThreadFromMessageSpec.builder()
                                 .name(
                                         filler.event.getMember().get().getDisplayName() + " - " +
                                                 filler.event.getMessage().getContent().substring(0, characterNumber) +

@@ -151,6 +151,10 @@ public class Core {
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                      NoSuchMethodException e) {
                 e.printStackTrace();
+            } catch (RuntimeException e) {
+                // Un worker défaillant ne doit pas empêcher le chargement des autres
+                Logger.logError("Le worker " + workerClass.getSimpleName() + " n'a pas pu être chargé : " + e);
+                e.printStackTrace();
             }
         }
 

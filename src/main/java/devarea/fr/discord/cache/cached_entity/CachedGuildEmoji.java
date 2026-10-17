@@ -11,7 +11,7 @@ public class CachedGuildEmoji extends CachedObject<GuildEmoji> {
 
     @Override
     public GuildEmoji fetch() {
-        this.object_cached = Core.devarea.getGuildEmojiById(Snowflake.of(this.object_id)).block();
+        this.object_cached = Core.devarea.getEmojiById(Snowflake.of(this.object_id)).block();
         return this.object_cached;
     }
 }

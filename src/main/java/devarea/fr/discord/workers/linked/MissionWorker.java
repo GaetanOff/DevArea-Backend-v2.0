@@ -24,7 +24,6 @@ import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.channel.GuildMessageChannel;
 import discord4j.core.object.entity.channel.TextChannel;
-import discord4j.core.object.reaction.ReactionEmoji;
 import discord4j.core.spec.*;
 import discord4j.discordjson.possible.Possible;
 import discord4j.rest.util.AllowedMentions;
@@ -280,8 +279,8 @@ public class MissionWorker implements Worker {
                                  "**" + mission.getTitle() + "**\n\nIl vous reste 3 jours pour nous confirmer ou non " +
                                  "si cette mission est toujours d'actualité.\n\nSi oui : <:ayy:" + Core.data.yes.asString() + "> si non : <:ayy:" + Core.data.no.asString() + ">.")
                     .color(ColorsUsed.same).build())
-                .addComponent(ActionRow.of(Button.primary("mission_yes", ReactionEmoji.custom(GuildEmojiCache.watch(Core.data.yes.asString()))),
-                    Button.primary("mission_no", ReactionEmoji.custom(GuildEmojiCache.watch(Core.data.no.asString())))))
+                .addComponent(ActionRow.of(Button.primary("mission_yes", GuildEmojiCache.watch(Core.data.yes.asString())),
+                    Button.primary("mission_no", GuildEmojiCache.watch(Core.data.no.asString()))))
                 .build()).block();
             mission.setLastUpdate(System.currentTimeMillis() - 604800000);
             mission.setMessageUpdate(new DBMessage(message));

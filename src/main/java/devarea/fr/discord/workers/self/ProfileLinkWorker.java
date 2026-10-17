@@ -13,6 +13,7 @@ import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
 import discord4j.core.object.entity.channel.GuildMessageChannel;
 import discord4j.core.spec.EmbedCreateSpec;
+import discord4j.core.spec.MessageCreateFields;
 import discord4j.core.spec.MessageCreateSpec;
 
 import javax.imageio.ImageIO;
@@ -102,7 +103,7 @@ public class ProfileLinkWorker implements Worker {
 
                     // Finalize builder
                     msgBuilder
-                        .addFile("profile.png", image_stream)
+                        .addFile(MessageCreateFields.File.of("profile.png", image_stream))
                         .addComponent(ActionRow.of(Button.link(DOMAIN_NAME + "member-profile?member_id=" + mem.getId().asString(), "devarea.fr")));
 
                     chan.entity.createMessage(msgBuilder.build()).subscribe();

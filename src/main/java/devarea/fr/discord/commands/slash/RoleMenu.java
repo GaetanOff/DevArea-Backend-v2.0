@@ -13,8 +13,11 @@ import devarea.fr.discord.statics.ColorsUsed;
 import discord4j.common.util.Snowflake;
 import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
+import discord4j.core.object.component.Label;
+import discord4j.core.object.component.LayoutComponent;
 import discord4j.core.object.component.SelectMenu;
 import discord4j.core.object.component.TextInput;
+import devarea.fr.utils.ModalUtils;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.channel.GuildMessageChannel;
 import discord4j.core.spec.*;
@@ -74,7 +77,7 @@ public class RoleMenu extends SlashCommand {
 
             ActionEvent<?> buttonOpenModal = (ActionEvent<ButtonInteractionEventFiller>) fillerButtonModal -> {
                 if (fillerButtonModal.event.getCustomId().equals("role_menu_id"))
-                    fillerButtonModal.event.presentModal("Donnez moi l'id du message !", "rolemenu_modal_id", List.of(ActionRow.of(TextInput.small("modal_id", "Message id : ", 19, 19)))).subscribe();
+                    fillerButtonModal.event.presentModal("Donnez moi l'id du message !", "rolemenu_modal_id", List.of(Label.of("Message id : ", TextInput.small("modal_id", 19, 19)))).subscribe();
             };
             fillerButton.mem.listenDuring(buttonOpenModal, true, SPOILED_TIME, contextFromButtonReply);
 
@@ -85,7 +88,7 @@ public class RoleMenu extends SlashCommand {
 
                     if (fillerModal.event.getCustomId().equals("rolemenu_modal_id")) {
 
-                        final String id = fillerModal.event.getComponents().get(0).getData().components().get().get(0).value().get();
+                        final String id = ModalUtils.getValue(fillerModal.event, 0);
 
 
                         Chan<GuildMessageChannel> chan = ChannelCache.get(fillerModal.event.getInteraction().getChannelId().asString());
@@ -139,7 +142,7 @@ public class RoleMenu extends SlashCommand {
             System.out.println("AtModif components number : " + atModif.getComponents().size());
             if (atModif.getComponents().size() != 0)
                 for (SelectOptionData option :
-                        atModif.getComponents().get(0).getChildren().get(0).getData().options().get()) {
+                        ((LayoutComponent) atModif.getComponents().get(0)).getChildren().get(0).getData().options().get()) {
                     options.add(SelectMenu.Option.of(option.label(), option.value()));
                 }
 
